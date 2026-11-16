@@ -1,1 +1,105 @@
-<!doctype html><html lang="my"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEXORA Gaming Shop</title><style>*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#0b1020;color:#fff}header{padding:28px 18px;text-align:center;background:linear-gradient(135deg,#171b3c,#43206b)}h1{margin:0;color:#f6c85f;font-size:30px}header p{color:#ddd}main{max-width:760px;margin:auto;padding:18px}.panel{background:#151d35;border:1px solid #34405f;border-radius:16px;padding:18px;margin:16px 0}.packages{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.pkg{background:#202b49;padding:14px;border-radius:12px;border:1px solid #465477}.pkg b{display:block;color:#f6c85f;font-size:19px;margin-bottom:6px}label{display:block;margin:12px 0 6px}input,select,textarea{width:100%;padding:12px;border-radius:9px;border:1px solid #64708d;background:#0e162b;color:white}button,.btn{display:inline-block;background:#e6b84f;color:#151515;font-weight:bold;border:0;padding:13px 18px;border-radius:10px;text-decoration:none;margin-top:14px;width:100%;text-align:center}small{color:#c7cce0}.pay{color:#f6c85f;font-weight:bold}@media(min-width:600px){.packages{grid-template-columns:repeat(3,1fr)}}</style></head><body><header><h1>NEXORA GAMING SHOP</h1><p>MLBB Diamonds • ယုံကြည်စိတ်ချစွာ ဝယ်ယူနိုင်ပါသည်</p></header><main><section class="panel"><h2>Diamond Packages</h2><p><small>လက်ရှိဈေးနှုန်းကို Telegram မှာ မေးမြန်းပါ။</small></p><div class="packages"><div class="pkg"><b>86 Diamonds</b>ဈေးနှုန်းမေးရန်</div><div class="pkg"><b>172 Diamonds</b>ဈေးနှုန်းမေးရန်</div><div class="pkg"><b>257 Diamonds</b>ဈေးနှုန်းမေးရန်</div><div class="pkg"><b>344 Diamonds</b>ဈေးနှုန်းမေးရန်</div><div class="pkg"><b>514 Diamonds</b>ဈေးနှုန်းမေးရန်</div><div class="pkg"><b>706 Diamonds</b>ဈေးနှုန်းမေးရန်</div></div></section><section class="panel"><h2>Order တင်ရန်</h2><form id="order"><label>MLBB User ID</label><input id="uid" required><label>Zone ID</label><input id="zone" required><label>Diamond Package</label><select id="pack"><option>86 Diamonds</option><option>172 Diamonds</option><option>257 Diamonds</option><option>344 Diamonds</option><option>514 Diamonds</option><option>706 Diamonds</option></select><label>ငွေပေးချေမှု</label><select id="method"><option>WavePay</option><option>KPay</option></select><label>ငွေလွှဲမှတ်ချက် / Transaction ID</label><textarea id="note" rows="3"></textarea><button type="submit">Telegram မှ Order ပို့ရန်</button></form></section><section class="panel"><h2>Payment</h2><p><span class="pay">WavePay / KPay</span></p><p>ဖုန်းနံပါတ်: <b>09672108091</b></p><small>ငွေလွှဲပြီးနောက် အော်ဒါကို Telegram မှပို့ပါ။ ငွေလက်ခံရရှိမှုကို ဆိုင်ဘက်မှ စစ်ဆေးပြီး ကိုယ်တိုင်ဖြည့်ဆည်းပေးပါမည်။</small><a class="btn" href="https://t.me/kophyo00003">Telegram ဆက်သွယ်ရန် @kophyo00003</a></section></main><script>document.getElementById('order').addEventListener('submit',function(e){e.preventDefault();let t=`NEXORA GAMING SHOP ORDER\nUser ID: ${document.getElementById('uid').value}\nZone ID: ${document.getElementById('zone').value}\nPackage: ${document.getElementById('pack').value}\nPayment: ${document.getElementById('method').value}\nNote: ${document.getElementById('note').value}`;location.href='https://t.me/kophyo00003?text='+encodeURIComponent(t)})</script></body></html>
+
+<!doctype html>
+<html lang="my">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEXORA Gaming Shop</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#080d1c;color:white}
+header{text-align:center;padding:35px 15px;background:linear-gradient(135deg,#111b3c,#56258a)}
+.logo{width:110px;height:110px;object-fit:contain;margin-bottom:10px}
+h1{color:#f6c85f;margin:5px;font-size:30px}
+header p{color:#ddd}
+main{max-width:760px;margin:auto;padding:15px}
+.panel{background:#151e38;border:1px solid #39476a;border-radius:16px;padding:18px;margin:16px 0}
+h2{color:#f6c85f}
+.hero{width:100%;border-radius:14px;display:block;margin:10px 0}
+.packages{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.pkg{background:#202d4c;border:1px solid #53658c;padding:17px 10px;border-radius:12px;text-align:center}
+.pkg b{display:block;color:#f6c85f;font-size:20px;margin-bottom:7px}
+label{display:block;margin:12px 0 6px}
+input,select,textarea{width:100%;padding:13px;border-radius:9px;border:1px solid #64708d;background:#0e162b;color:white;font-size:16px}
+button,.btn{display:block;width:100%;background:#f1c354;color:#151515;font-weight:bold;border:0;padding:14px;border-radius:10px;text-decoration:none;text-align:center;margin-top:14px;font-size:16px}
+.pay{color:#f6c85f;font-weight:bold}
+small{color:#cbd2e5;line-height:1.7}
+footer{text-align:center;color:#aaa;padding:20px}
+@media(min-width:600px){.packages{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+
+<header>
+<img class="logo" src="assets/nexora-logo.png" alt="NEXORA Logo">
+<h1>NEXORA GAMING SHOP</h1>
+<p>MLBB Diamonds • Fast & Trusted Service</p>
+</header>
+
+<main>
+<section class="panel">
+<img class="hero" src="assets/nexora-homepage-concept.png" alt="NEXORA Gaming Shop">
+<h2>💎 Diamond Packages</h2>
+<div class="packages">
+<div class="pkg"><b>86 💎</b>ဈေးနှုန်းမေးရန်</div>
+<div class="pkg"><b>172 💎</b>ဈေးနှုန်းမေးရန်</div>
+<div class="pkg"><b>257 💎</b>ဈေးနှုန်းမေးရန်</div>
+<div class="pkg"><b>344 💎</b>ဈေးနှုန်းမေးရန်</div>
+<div class="pkg"><b>514 💎</b>ဈေးနှုန်းမေးရန်</div>
+<div class="pkg"><b>706 💎</b>ဈေးနှုန်းမေးရန်</div>
+</div>
+</section>
+
+<section class="panel">
+<h2>🛒 Order တင်ရန်</h2>
+<form id="order">
+<label>MLBB User ID</label>
+<input id="uid" required>
+<label>Zone ID</label>
+<input id="zone" required>
+<label>Diamond Package</label>
+<select id="pack">
+<option>86 Diamonds</option>
+<option>172 Diamonds</option>
+<option>257 Diamonds</option>
+<option>344 Diamonds</option>
+<option>514 Diamonds</option>
+<option>706 Diamonds</option>
+</select>
+<label>ငွေပေးချေမှု</label>
+<select id="method">
+<option>WavePay</option>
+<option>KPay</option>
+</select>
+<label>Transaction ID / မှတ်ချက်</label>
+<textarea id="note" rows="3"></textarea>
+<button type="submit">Telegram မှ Order ပို့ရန်</button>
+</form>
+</section>
+
+<section class="panel">
+<h2>💳 Payment</h2>
+<p class="pay">WavePay / KPay</p>
+<p>ဖုန်းနံပါတ်: <b>09672108091</b></p>
+<small>ငွေလွှဲပြီးပါက Order တင်ပေးပါ။ ငွေလက်ခံရရှိမှုကို စစ်ဆေးပြီး ဆိုင်ဘက်မှ ကိုယ်တိုင်ဖြည့်ဆည်းပေးပါမည်။</small>
+<a class="btn" href="https://t.me/kophyo00003">Telegram ဆက်သွယ်ရန်</a>
+</section>
+</main>
+
+<footer>© 2026 NEXORA GAMING SHOP</footer>
+
+<script>
+document.getElementById('order').addEventListener('submit',function(e){
+e.preventDefault();
+let t=`NEXORA GAMING SHOP ORDER
+User ID: ${document.getElementById('uid').value}
+Zone ID: ${document.getElementById('zone').value}
+Package: ${document.getElementById('pack').value}
+Payment: ${document.getElementById('method').value}
+Note: ${document.getElementById('note').value}`;
+location.href='https://t.me/kophyo00003?text='+encodeURIComponent(t);
+});
+</script>
+
+</body>
+</html>
