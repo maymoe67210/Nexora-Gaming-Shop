@@ -1,4 +1,4 @@
-
+ၒ
 
 <!doctype html>
 <html lang="my">
@@ -47,19 +47,30 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 async function loadPackages() {
-  const snapshot = await getDocs(collection(db, "packages"));
   const area = document.querySelector(".packages");
-  area.innerHTML = "";
 
-  snapshot.forEach((doc) => {
-    const item = doc.data();
-    area.innerHTML += `
-      <div class="pkg">
-        <b>${item.diamonds} 💎</b>
-        ${item.price} ကျပ်
-      </div>
-    `;
-  });
+  try {
+    const snapshot = await getDocs(collection(db, "packages"));
+    area.innerHTML = "";
+
+    snapshot.forEach((doc) => {
+      const item = doc.data();
+
+      area.innerHTML += `
+        <div class="pkg">
+          <b>${item.diamonds} 💎</b>
+          ${item.price} ကျပ်
+        </div>
+      `;
+    });
+
+    if (snapshot.empty) {
+      area.innerHTML = "Package မရှိသေးပါ";
+    }
+  } catch (error) {
+    console.error("Firebase Error:", error);
+    area.innerHTML = "ဈေးနှုန်းဖတ်မရပါ။ ပြန်စမ်းကြည့်ပါ။";
+  }
 }
 
 loadPackages();
