@@ -46,6 +46,23 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+async function loadPackages() {
+  const snapshot = await getDocs(collection(db, "packages"));
+  const area = document.querySelector(".packages");
+  area.innerHTML = "";
+
+  snapshot.forEach((doc) => {
+    const item = doc.data();
+    area.innerHTML += `
+      <div class="pkg">
+        <b>${item.diamonds} 💎</b>
+        ${item.price} ကျပ်
+      </div>
+    `;
+  });
+}
+
+loadPackages();
 </script>
 <header>
 <img class="logo" src="assets/nexora-logo.png" alt="NEXORA Logo">
