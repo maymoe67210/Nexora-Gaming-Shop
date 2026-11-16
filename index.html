@@ -30,7 +30,23 @@ footer{text-align:center;color:#aaa;padding:20px}
 </style>
 </head>
 <body>
+  
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/13.3.0/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/13.3.0/firebase-firestore.js";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyDHkN40ZUNKXAbtS6pVuWyigScljDIsCKo",
+  authDomain: "nexora-gaming-shop.firebaseapp.com",
+  projectId: "nexora-gaming-shop",
+  storageBucket: "nexora-gaming-shop.firebasestorage.app",
+  messagingSenderId: "659470966491",
+  appId: "1:659470966491:web:0ee9e44f092d1e5f1a36fe"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+</script>
 <header>
 <img class="logo" src="assets/nexora-logo.png" alt="NEXORA Logo">
 <h1>NEXORA GAMING SHOP</h1>
