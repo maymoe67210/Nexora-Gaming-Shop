@@ -1,4 +1,4 @@
-ၒ
+
 
 <!doctype html>
 <html lang="my">
@@ -55,6 +55,7 @@ async function loadPackages() {
 
     snapshot.forEach((doc) => {
       const item = doc.data();
+      console.log(item);
 
       area.innerHTML += `
         <div class="pkg">
