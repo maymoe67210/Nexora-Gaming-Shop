@@ -2,10 +2,17 @@
 <!doctype html>
 <html lang="my">
 <head>
- <link rel="manifest" href="/Nexora-Gaming-Shop/manifest.json">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NEXORA Gaming Shop</title>
+
+<link rel="manifest" href="/Nexora-Gaming-Shop/manifest.webmanifest">
+<meta name="theme-color" content="#080D1C">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<title>NEXORA GAMING SHOP</title>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#080d1c;color:white}
@@ -36,6 +43,7 @@ footer{text-align:center;color:#aaa;padding:20px}
 @media(min-width:600px){.packages{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
+
 <body>
 
 <script type="module">
@@ -316,14 +324,14 @@ loadPackages();
 
 <script>
 document.getElementById('order').addEventListener('submit',function(e){
-e.preventDefault();
-let t=`NEXORA GAMING SHOP ORDER
+ e.preventDefault();
+ let t=`NEXORA GAMING SHOP ORDER
 User ID: ${document.getElementById('uid').value}
 Zone ID: ${document.getElementById('zone').value}
 Package: ${document.getElementById('pack').value}
 Payment: ${document.getElementById('method').value}
 Note: ${document.getElementById('note').value}`;
-location.href='https://t.me/kophyo00003?text='+encodeURIComponent(t);
+ location.href='https://t.me/kophyo00003?text='+encodeURIComponent(t);
 });
 </script>
 
