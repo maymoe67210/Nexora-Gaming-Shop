@@ -1,0 +1,14 @@
+{
+  "background_color": "rgb(0, 0, 0)",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "NEXORA GAMING SHOP",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "NEXORA",
+  "start_url": "/",
+  "theme_color": "rgb(30, 58, 138)",
+  "description": "MLBB Diamonds - Fast &amp; Trusted Service",
+  "id": "nexora-gaming-shop",
+  "lang": "my"
+}
