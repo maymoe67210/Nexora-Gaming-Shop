@@ -1,5 +1,4 @@
 
-
 <!doctype html>
 <html lang="my">
 <head>
@@ -23,63 +22,224 @@ h2{color:#f6c85f}
 label{display:block;margin:12px 0 6px}
 input,select,textarea{width:100%;padding:13px;border-radius:9px;border:1px solid #64708d;background:#0e162b;color:white;font-size:16px}
 button,.btn{display:block;width:100%;background:#f1c354;color:#151515;font-weight:bold;border:0;padding:14px;border-radius:10px;text-decoration:none;text-align:center;margin-top:14px;font-size:16px}
+button.danger{background:#bd4545;color:white}
+button.secondary{background:#53658c;color:white}
 .pay{color:#f6c85f;font-weight:bold}
 small{color:#cbd2e5;line-height:1.7}
 footer{text-align:center;color:#aaa;padding:20px}
+#adminPanel{display:none}
+.admin-item{background:#202d4c;padding:12px;border-radius:10px;margin:10px 0}
+.admin-actions{display:flex;gap:8px}
+.admin-actions button{flex:1}
+#status{color:#f6c85f;margin-top:10px}
 @media(min-width:600px){.packages{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 <body>
-  
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.3.0/firebase-app.js";
- 
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/13.3.0/firebase-firestore.js";
- 
+import {
+ getFirestore, collection, getDocs, addDoc,
+ updateDoc, deleteDoc, doc
+} from "https://www.gstatic.com/firebasejs/13.3.0/firebase-firestore.js";
+import {
+ getAuth, signInWithEmailAndPassword,
+ onAuthStateChanged, signOut
+} from "https://www.gstatic.com/firebasejs/13.3.0/firebase-auth.js";
+
 const firebaseConfig = {
-  apiKey: "AIzaSyDHkN40ZUNKXAbtS6pVuWyigScljDIsCKo",
-  authDomain: "nexora-gaming-shop.firebaseapp.com",
-  projectId: "nexora-gaming-shop",
-  storageBucket: "nexora-gaming-shop.firebasestorage.app",
-  messagingSenderId: "659470966491",
-  appId: "1:659470966491:web:0ee9e44f092d1e5f1a36fe"
+ apiKey: "AIzaSyDHkN40ZUNKXAbtS6pVuWyigScljDIsCKo",
+ authDomain: "nexora-gaming-shop.firebaseapp.com",
+ projectId: "nexora-gaming-shop",
+ storageBucket: "nexora-gaming-shop.firebasestorage.app",
+ messagingSenderId: "659470966491",
+ appId: "1:659470966491:web:0ee9e44f092d1e5f1a36fe",
+ measurementId: "G-KYLS5LSVLV"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-  const auth = getAuth(app);
-let isAdmin = false;
-  async function loadPackages() {
-  const area = document.querySelector(".packages");
+const auth = getAuth(app);
+const ADMIN_UID = "3UHyAeGWFtep4skVaziNPYPPIZw2";
 
-  try {
-    const snapshot = await getDocs(collection(db, "packages"));
-   const packages = [];
-    area.innerHTML = "";
+const area = document.querySelector(".packages");
+const packSelect = document.getElementById("pack");
+const adminPanel = document.getElementById("adminPanel");
+const loginPanel = document.getElementById("loginPanel");
+const adminList = document.getElementById("adminList");
+const status = document.getElementById("status");
 
-    snapshot.forEach((doc) => {
-      const item = doc.data();
-      console.log(item);
-
-      area.innerHTML += `
-        <div class="pkg">
-          <b>${item.diamonds} 💎</b>
-          ${item.price} ကျပ်
-        </div>
-      `;
-    });
-
-    if (snapshot.empty) {
-      area.innerHTML = "Package မရှိသေးပါ";
-    }
-  } catch (error) {
-    console.error("Firebase Error:", error);
-    area.innerHTML = "ဈေးနှုန်းဖတ်မရပါ။ ပြန်စမ်းကြည့်ပါ။";
-  }
+function safe(value){
+ return String(value ?? "").replace(/[&<>"']/g, c => ({
+  "&":"&amp;","<":"&lt;",">":"&gt;",
+  '"':"&quot;","'":"&#39;"
+ }[c]));
 }
+
+async function loadPackages(){
+ try{
+  const snapshot = await getDocs(collection(db,"packages"));
+  area.innerHTML = "";
+  packSelect.innerHTML = "";
+
+  snapshot.forEach(itemDoc => {
+   const item = itemDoc.data();
+   const diamonds = Number(item.diamonds);
+   const price = Number(item.price);
+   if(!diamonds || !price) return;
+
+   area.innerHTML += `
+    <div class="pkg">
+     <b>${safe(diamonds)} 💎</b>
+     ${safe(price)} ကျပ်
+    </div>`;
+
+   const option = document.createElement("option");
+   option.value = diamonds + " Diamonds";
+   option.textContent = diamonds + " Diamonds - " + price + " ကျပ်";
+   packSelect.appendChild(option);
+  });
+
+  if(!area.innerHTML){
+   area.textContent = "Package မရှိသေးပါ";
+  }
+  if(!packSelect.options.length){
+   const option = document.createElement("option");
+   option.textContent = "Package မရှိသေးပါ";
+   packSelect.appendChild(option);
+  }
+
+  if(auth.currentUser?.uid === ADMIN_UID){
+   showAdminPackages(snapshot);
+  }
+ }catch(error){
+  console.error(error);
+  area.textContent = "ဈေးနှုန်းဖတ်မရပါ။ ပြန်စမ်းကြည့်ပါ။";
+  status.textContent = "Firebase Error: " + error.message;
+ }
+}
+
+function showAdminPackages(snapshot){
+ adminList.innerHTML = "";
+ snapshot.forEach(itemDoc => {
+  const item = itemDoc.data();
+  const div = document.createElement("div");
+  div.className = "admin-item";
+  div.innerHTML = `
+   <b>${safe(item.diamonds)} 💎 - ${safe(item.price)} ကျပ်</b>
+   <div class="admin-actions">
+    <button class="secondary" data-edit="${safe(itemDoc.id)}">ပြင်ရန်</button>
+    <button class="danger" data-delete="${safe(itemDoc.id)}">ဖျက်ရန်</button>
+   </div>`;
+  adminList.appendChild(div);
+ });
+}
+
+onAuthStateChanged(auth, user => {
+ const allowed = user && user.uid === ADMIN_UID;
+ adminPanel.style.display = allowed ? "block" : "none";
+ loginPanel.style.display = allowed ? "none" : "block";
+ if(user && !allowed){
+  status.textContent = "ဒီအကောင့်မှာ Admin ခွင့်ပြုချက်မရှိပါ။";
+ }
+ if(allowed){
+  status.textContent = "Admin ဝင်ထားပါသည်။";
+  loadPackages();
+ }
+});
+
+document.getElementById("loginForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ status.textContent = "ဝင်နေပါသည်...";
+ try{
+  await signInWithEmailAndPassword(
+   auth,
+   document.getElementById("adminEmail").value,
+   document.getElementById("adminPassword").value
+  );
+  status.textContent = "Login အောင်မြင်ပါသည်။";
+ }catch(error){
+  status.textContent = "Login မအောင်မြင်ပါ။ Email/Password စစ်ပါ။";
+ }
+});
+
+document.getElementById("logout").addEventListener("click",async()=>{
+ await signOut(auth);
+ status.textContent = "Logout လုပ်ပြီးပါပြီ။";
+});
+
+document.getElementById("addPackage").addEventListener("submit",async e=>{
+ e.preventDefault();
+ if(auth.currentUser?.uid !== ADMIN_UID) return;
+
+ const diamonds = Number(document.getElementById("newDiamonds").value);
+ const price = Number(document.getElementById("newPrice").value);
+
+ if(diamonds <= 0 || price <= 0){
+  status.textContent = "Diamond နဲ့ ဈေးနှုန်း မှန်ကန်စွာထည့်ပါ။";
+  return;
+ }
+
+ try{
+  await addDoc(collection(db,"packages"),{diamonds,price});
+  status.textContent = "Package ထည့်ပြီးပါပြီ။";
+  e.target.reset();
+  await loadPackages();
+ }catch(error){
+  status.textContent = "ထည့်မရပါ: " + error.message;
+ }
+});
+
+adminList.addEventListener("click",async e=>{
+ if(auth.currentUser?.uid !== ADMIN_UID) return;
+
+ const editId = e.target.dataset.edit;
+ const deleteId = e.target.dataset.delete;
+
+ if(editId){
+  const snap = await getDocs(collection(db,"packages"));
+  const found = snap.docs.find(d=>d.id===editId);
+  if(!found) return;
+
+  const old = found.data();
+  const diamonds = prompt("Diamond အရေအတွက်",old.diamonds);
+  if(diamonds === null) return;
+  const price = prompt("ဈေးနှုန်း",old.price);
+  if(price === null) return;
+
+  if(Number(diamonds)<=0 || Number(price)<=0){
+   status.textContent = "နံပါတ်မှန်ကန်စွာထည့်ပါ။";
+   return;
+  }
+
+  try{
+   await updateDoc(doc(db,"packages",editId),{
+    diamonds:Number(diamonds),
+    price:Number(price)
+   });
+   status.textContent = "ပြင်ဆင်ပြီးပါပြီ။";
+   await loadPackages();
+  }catch(error){
+   status.textContent = "ပြင်မရပါ: " + error.message;
+  }
+ }
+
+ if(deleteId){
+  if(!confirm("ဒီ Package ကို ဖျက်မှာ သေချာပါသလား။")) return;
+  try{
+   await deleteDoc(doc(db,"packages",deleteId));
+   status.textContent = "ဖျက်ပြီးပါပြီ။";
+   await loadPackages();
+  }catch(error){
+   status.textContent = "ဖျက်မရပါ: " + error.message;
+  }
+ }
+});
 
 loadPackages();
 </script>
+
 <header>
 <img class="logo" src="assets/nexora-logo.png" alt="NEXORA Logo">
 <h1>NEXORA GAMING SHOP</h1>
@@ -91,12 +251,7 @@ loadPackages();
 <img class="hero" src="assets/nexora-homepage-concept.png" alt="NEXORA Gaming Shop">
 <h2>💎 Diamond Packages</h2>
 <div class="packages">
-<div class="pkg"><b>86 💎</b>ဈေးနှုန်းမေးရန်</div>
-<div class="pkg"><b>172 💎</b>ဈေးနှုန်းမေးရန်</div>
-<div class="pkg"><b>257 💎</b>ဈေးနှုန်းမေးရန်</div>
-<div class="pkg"><b>344 💎</b>ဈေးနှုန်းမေးရန်</div>
-<div class="pkg"><b>514 💎</b>ဈေးနှုန်းမေးရန်</div>
-<div class="pkg"><b>706 💎</b>ဈေးနှုန်းမေးရန်</div>
+<div class="pkg">ဈေးနှုန်းဖတ်နေပါသည်...</div>
 </div>
 </section>
 
@@ -108,14 +263,7 @@ loadPackages();
 <label>Zone ID</label>
 <input id="zone" required>
 <label>Diamond Package</label>
-<select id="pack">
-<option>86 Diamonds</option>
-<option>172 Diamonds</option>
-<option>257 Diamonds</option>
-<option>344 Diamonds</option>
-<option>514 Diamonds</option>
-<option>706 Diamonds</option>
-</select>
+<select id="pack"></select>
 <label>ငွေပေးချေမှု</label>
 <select id="method">
 <option>WavePay</option>
@@ -133,6 +281,33 @@ loadPackages();
 <p>ဖုန်းနံပါတ်: <b>09672108091</b></p>
 <small>ငွေလွှဲပြီးပါက Order တင်ပေးပါ။ ငွေလက်ခံရရှိမှုကို စစ်ဆေးပြီး ဆိုင်ဘက်မှ ကိုယ်တိုင်ဖြည့်ဆည်းပေးပါမည်။</small>
 <a class="btn" href="https://t.me/kophyo00003">Telegram ဆက်သွယ်ရန်</a>
+</section>
+
+<section class="panel" id="loginPanel">
+<h2>🔐 Admin Login</h2>
+<form id="loginForm">
+<label>Admin Email</label>
+<input id="adminEmail" type="email" required>
+<label>Password</label>
+<input id="adminPassword" type="password" required>
+<button type="submit">Login ဝင်ရန်</button>
+</form>
+<p id="status"></p>
+</section>
+
+<section class="panel" id="adminPanel">
+<h2>⚙️ Admin Panel</h2>
+<p>Diamond ဈေးနှုန်းများ စီမံရန်</p>
+<form id="addPackage">
+<label>Diamond အရေအတွက်</label>
+<input id="newDiamonds" type="number" placeholder="ဥပမာ 86" required>
+<label>ဈေးနှုန်း (ကျပ်)</label>
+<input id="newPrice" type="number" placeholder="ဥပမာ 5000" required>
+<button type="submit">Package အသစ်ထည့်ရန်</button>
+</form>
+<h2>📦 Package များ</h2>
+<div id="adminList"></div>
+<button class="danger" id="logout" type="button">Logout</button>
 </section>
 </main>
 
