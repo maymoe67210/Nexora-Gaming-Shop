@@ -48,7 +48,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
   const auth = getAuth(app);
-async function loadPackages() {
+let isAdmin = false;
+  async function loadPackages() {
   const area = document.querySelector(".packages");
 
   try {
