@@ -54,6 +54,7 @@ let isAdmin = false;
 
   try {
     const snapshot = await getDocs(collection(db, "packages"));
+   const packages = [];
     area.innerHTML = "";
 
     snapshot.forEach((doc) => {
